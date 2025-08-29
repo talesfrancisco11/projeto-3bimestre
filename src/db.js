@@ -1,17 +1,18 @@
+// Conexão com o banco de dados usando Prisma
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
+// Criar uma única instância do Prisma (padrão Singleton)
+const prisma = new PrismaClient();
 
-async function connectDB() {
-  try {
-    await prisma.$connect();
-    console.log("✅ Conexão com o banco estabelecida com sucesso!");
-  } catch (err) {
-    console.error("❌ Erro ao conectar com o banco:", err);
-    process.exit(1); // encerra a aplicação se não conectar
-  }
-}
+// Conectar ao banco quando o módulo for carregado
+prisma
+  .$connect()
+  .then(() => {
+    console.log("✅ Conectado ao banco de dados!");
+  })
+  .catch((error) => {
+    console.error("❌ Erro ao conectar:", error.message);
+  });
 
-connectDB();
-
+// Exportar a instância para usar nas rotas
 export default prisma;
