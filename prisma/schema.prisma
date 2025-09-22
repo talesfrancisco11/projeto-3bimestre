@@ -19,4 +19,35 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relação 1-1 com Store (opcional)
+  store     Store?
+}
+
+model Store {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  userId      Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relações
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products    Product[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+  storeId     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relação N-1 com Store
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
 }
